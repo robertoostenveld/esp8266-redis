@@ -41,7 +41,12 @@ bool Redis::begin(void)
  */
 bool Redis::begin(const char *password)
 {
-    if(this->conn.connect(this->addr, this->port)) 
+    if (this->conn.connected())
+    {
+        // already connected
+        return true;
+    }
+    else if (this->conn.connect(this->addr, this->port)) 
     {
         // the NoDelay and Timeout should be specified prior to making the connection
         this->conn.setNoDelay(this->NoDelay);
@@ -110,6 +115,9 @@ bool Redis::setTimeout(long val)
  */
 bool Redis::set(const char *key, const char *value)
 {
+    if (!this->conn.connected())
+        return false;
+
     this->conn.println("*3");
     this->conn.println("$3");
     this->conn.println("SET");
@@ -162,6 +170,9 @@ String Redis::get(const char *key)
  */
 int Redis::publish(const char *channel, const char *message)
 {
+    if (!this->conn.connected())
+        return -1;
+
     this->conn.println("*3");
     this->conn.println("$7");
     this->conn.println("PUBLISH");
