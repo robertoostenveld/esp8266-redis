@@ -8,8 +8,8 @@ Redis::Redis(const char *addr, int port)
 {
     this->addr = addr;
     this->port = port;
-    this->NoDelay = false;
-    this->Timeout = 100;
+    this->noDelay = false;
+    this->timeout = 100;
 }
 
 /**
@@ -49,8 +49,8 @@ bool Redis::begin(const char *password)
     else if (this->conn.connect(this->addr, this->port)) 
     {
         // the NoDelay and Timeout should be specified prior to making the connection
-        this->conn.setNoDelay(this->NoDelay);
-        this->conn.setTimeout(this->Timeout);
+        this->conn.setNoDelay(this->noDelay);
+        this->conn.setTimeout(this->timeout);
         int passwordLength = strlen(password);
         if (passwordLength > 0)
         {
@@ -83,7 +83,7 @@ bool Redis::setNoDelay(bool val)
     }
     else
     {
-        this->NoDelay = val;
+        this->noDelay = val;
         return true;
     }
 }
@@ -102,7 +102,7 @@ bool Redis::setTimeout(long val)
     }
     else
     {
-        this->Timeout = val;
+        this->timeout = val;
         return true;
     }
 }
